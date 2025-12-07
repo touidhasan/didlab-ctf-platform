@@ -1,0 +1,22 @@
+# Python
+__pycache__/
+*.pyc
+
+# Editors
+.idea/
+.vscode/
+
+# OS junk
+.DS_Store
+
+# Docker data
+data/
+infra/db-data/
+infra/ctfd-uploads/
+
+# Node / front-end (if added later)
+node_modules/
+
+# Virtualenvs
+venv/
+.env
