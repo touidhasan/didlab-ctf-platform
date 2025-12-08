@@ -18,7 +18,7 @@ services:
       # Persistent uploads (challenges, logos, etc.)
       - ../data/ctfd-uploads:/var/uploads
       # Mount our plugins into CTFd (each as its own folder)
-      #- ../platform/plugins/didlab-gym:/opt/CTFd/CTFd/plugins/didlab-gym
+      - ../platform/plugins/didlab-gym:/opt/CTFd/CTFd/plugins/didlab-gym
       #- ../platform/plugins/didlab-courses:/opt/CTFd/CTFd/plugins/didlab-courses
       #- ../platform/plugins/didlab-contests:/opt/CTFd/CTFd/plugins/didlab-contests
       #- ../platform/plugins/didlab-dashboard:/opt/CTFd/CTFd/plugins/didlab-dashboard
