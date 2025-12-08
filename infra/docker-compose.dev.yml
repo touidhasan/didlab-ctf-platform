@@ -1,0 +1,44 @@
+#version: "3.8"
+services:
+  ctfd:
+    image: ctfd/ctfd:latest
+    restart: unless-stopped
+    environment:
+      - CTFD_SECRET_KEY=change_this_secret
+      - DATABASE_URL=mysql+pymysql://ctfd:ctfd@db/ctfd
+      - REDIS_URL=redis://redis:6379/0
+      - UPLOAD_FOLDER=/var/uploads
+
+    depends_on:
+      - db
+      - redis
+    volumes:
+      #- ./ctfd-data:/var/uploads
+      #- ../platform/plugins:/opt/CTFd/CTFd/plugins  # mount our plugins
+      # Persistent uploads (challenges, logos, etc.)
+      - ../data/ctfd-uploads:/var/uploads
+      # Mount our plugins into CTFd (each as its own folder)
+      #- ../platform/plugins/didlab-gym:/opt/CTFd/CTFd/plugins/didlab-gym
+      #- ../platform/plugins/didlab-courses:/opt/CTFd/CTFd/plugins/didlab-courses
+      #- ../platform/plugins/didlab-contests:/opt/CTFd/CTFd/plugins/didlab-contests
+      #- ../platform/plugins/didlab-dashboard:/opt/CTFd/CTFd/plugins/didlab-dashboard
+
+    ports:
+      - "8000:8000"
+
+  db:
+     image: mariadb:10.6
+     restart: unless-stopped
+     environment:
+       - MYSQL_ROOT_PASSWORD=ctfd_root_password
+       - MYSQL_DATABASE=ctfd
+       - MYSQL_USER=ctfd
+       - MYSQL_PASSWORD=ctfd
+     volumes:
+       - ../data/db-data:/var/lib/mysql
+
+  
+
+  redis:
+    image: redis:7
+    restart: unless-stopped
