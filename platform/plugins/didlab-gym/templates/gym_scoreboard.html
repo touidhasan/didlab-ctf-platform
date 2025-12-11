@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-4">
+  <div class="row mb-3">
+    <div class="col-md-8">
+      <h1>DiDLAB CTF – Scoreboard</h1>
+      {% if course_code %}
+        <p>
+          <strong>Course:</strong> {{ course_code }}
+          {% if section %} • <strong>Section:</strong> {{ section }}{% endif %}
+          {% if term %} • <strong>Term:</strong> {{ term }}{% endif %}
+        </p>
+      {% else %}
+        <p>This scoreboard is filtered using your profile fields (<code>course_code</code>, <code>section</code>, <code>term</code>).</p>
+      {% endif %}
+    </div>
+    <div class="col-md-4 text-md-right">
+      <div class="btn-group mt-2" role="group">
+        <a class="btn btn-secondary" href="/course-hub">Course hub</a>
+        <a class="btn btn-secondary" href="/gym">Practice view</a>
+        <a class="btn btn-secondary" href="/challenges?from_gym=1">Challenges</a>
+      </div>
+    </div>
+  </div>
+
+  {% if rows %}
+    <table class="table table-striped table-bordered">
+      <thead>
+        <tr>
+          <th style="width: 10%;">Rank</th>
+          <th style="width: 40%;">Participant</th>
+          <th style="width: 15%;">Score</th>
+          <th style="width: 35%;">Course / Section / Term</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for row in rows %}
+          <tr>
+            <td>#{{ row.rank }}</td>
+            <td>{{ row.name }}</td>
+            <td>{{ row.score }}</td>
+            <td>
+              {{ row.course_code }}
+              {% if row.section %} • Sec {{ row.section }}{% endif %}
+              {% if row.term %} • {{ row.term }}{% endif %}
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% else %}
+    <div class="alert alert-info">
+      No solves recorded yet for this course / section.
+    </div>
+  {% endif %}
+</div>
+{% endblock %}

@@ -1,53 +1,86 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div class="container mt-4">
-  <div class="row mb-4">
-    <div class="col-12">
-      <h1>DIDLab Gym</h1>
-      <p class="lead">
-        Practice challenges across all courses and events. This view is
-        course-agnostic – it shows every non-hidden challenge you have access to.
-      </p>
-    </div>
+<div class="container">
+  <h1>DIDLab Gym</h1>
+
+  <p>
+    Practice challenges across all courses and events.
+    This view is course-aware for enrolled students and open for practice users.
+  </p>
+
+  {% if course_code %}
+    <p>
+      <strong>Your course:</strong> {{ course_code }}
+      {% if section %} (section {{ section }}){% endif %}
+      {% if term %}, {{ term }}{% endif %}
+    </p>
+  {% else %}
+    <p>
+      <strong>You are registered as a practice / guest user.</strong>
+      You see only open practice problems.
+    </p>
+  {% endif %}
+
+  <div class="btn-group mb-3" role="group" aria-label="Gym views">
+    <a class="btn btn-{% if view == 'course_week' %}primary{% else %}secondary{% endif %}"
+       href="{{ url_for('didlab_gym.gym_index', view='course_week') }}">
+      My course – this week{% if week %} (Week {{ week }}){% endif %}
+    </a>
+
+    <a class="btn btn-{% if view == 'course_all' %}primary{% else %}secondary{% endif %}"
+       href="{{ url_for('didlab_gym.gym_index', view='course_all') }}">
+      My course – all weeks
+    </a>
+
+    <a class="btn btn-{% if view == 'practice_all' %}primary{% else %}secondary{% endif %}"
+       href="{{ url_for('didlab_gym.gym_index', view='practice_all') }}">
+      All practice
+    </a>
   </div>
 
-  {% if challenges %}
-    <div class="row">
-      <div class="col-12">
-        <table class="table table-striped table-hover">
-          <thead>
-            <tr>
-              <th>Category</th>
-              <th>Challenge</th>
-              <th class="text-end">Points</th>
-              <th class="text-center">Status</th>
-            </tr>
-          </thead>
-          <tbody>
-          {% for chal in challenges %}
-            <tr>
-              <td>{{ chal.category }}</td>
-              <td>{{ chal.name }}</td>
-              <td class="text-end">{{ chal.value }}</td>
-              <td class="text-center">
-                {% if chal.solved %}
-                  <span class="badge bg-success">Solved</span>
-                {% else %}
-                  <span class="badge bg-secondary">Unsolved</span>
-                {% endif %}
-              </td>
-            </tr>
-          {% endfor %}
-          </tbody>
-        </table>
-      </div>
+  {% if view == 'course_week' and course_code %}
+    <p>Showing challenges tagged for your course and <strong>Week {{ week }}</strong>.</p>
+  {% elif view == 'course_all' and course_code %}
+    <p>Showing <strong>all challenges</strong> tagged for your course.</p>
+  {% else %}
+    <p>Showing all challenges tagged <code>mode:practice</code>.</p>
+  {% endif %}
+
+  {% if not challenges %}
+    <div class="alert alert-info mt-3">
+      No challenges match this view yet. Check that tags (course:..., week:..., mode:...) are set correctly.
     </div>
   {% else %}
-    <div class="alert alert-info">
-      No visible challenges yet. Add challenges in the Admin Panel and
-      they’ll automatically appear here.
-    </div>
+    <table class="table table-striped mt-3">
+      <thead>
+        <tr>
+          <th>Category</th>
+          <th>Challenge</th>
+          <th>Points</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+      {% for c in challenges %}
+        <tr>
+          <td>{{ c.category }}</td>
+          <td>
+            <!-- Direct link to challenge detail -->
+            <a href="/challenges/{{ c.id }}">{{ c.name }}</a>
+          </td>
+          <td>{{ c.value }}</td>
+          <td>
+            {% if c.solved %}
+              <span class="badge bg-success">Solved</span>
+            {% else %}
+              <span class="badge bg-secondary">Unsolved</span>
+            {% endif %}
+          </td>
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
   {% endif %}
 </div>
 {% endblock %}

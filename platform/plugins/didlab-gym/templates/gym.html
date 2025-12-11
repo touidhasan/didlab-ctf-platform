@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-4">
+  <div class="row mb-3">
+    <div class="col-md-8">
+      <h1>DiDLAB CTF – Practice</h1>
+      <p>
+        Course-aware challenge list for your class.
+        {% if course_code %}
+          <br>
+          <strong>Course:</strong> {{ course_code }}
+          {% if section %} • <strong>Section:</strong> {{ section }}{% endif %}
+          {% if term %} • <strong>Term:</strong> {{ term }}{% endif %}
+        {% else %}
+          <br>
+          <em>Your profile does not have a <code>course_code</code> set yet. Please update it under Settings.</em>
+        {% endif %}
+      </p>
+    </div>
+    <div class="col-md-4 text-md-right">
+      <div class="btn-group mt-2" role="group">
+        <a class="btn btn-secondary" href="/course-hub">Course hub</a>
+        <a class="btn btn-secondary" href="/challenges?from_gym=1">Challenges view</a>
+        <a class="btn btn-primary" href="/gym/scoreboard">View course scoreboard</a>
+      </div>
+    </div>
+  </div>
+
+  {% if grouped_challenges %}
+    <table class="table table-striped table-bordered">
+      <thead>
+        <tr>
+          <th style="width: 20%;">Category</th>
+          <th style="width: 40%;">Challenge</th>
+          <th style="width: 10%;">Points</th>
+          <th style="width: 15%;">Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for category, chals in grouped_challenges.items() %}
+          {% for chal in chals %}
+            <tr>
+              {% if loop.first %}
+                <td rowspan="{{ chals|length }}">{{ category }}</td>
+              {% endif %}
+              <td>
+                <!-- IMPORTANT: only_challenge + from_gym=1 so your modified challenges page shows just this one -->
+                <a href="/challenges?from_gym=1&only_challenge={{ chal.id }}">
+                  {{ chal.name }}
+                </a>
+              </td>
+              <td>{{ chal.points }}</td>
+              <td>
+                {% if chal.solved %}
+                  <span class="badge badge-success">Solved</span>
+                {% else %}
+                  <span class="badge badge-secondary">Unsolved</span>
+                {% endif %}
+              </td>
+            </tr>
+          {% endfor %}
+        {% endfor %}
+      </tbody>
+    </table>
+  {% else %}
+    <div class="alert alert-info">
+      No visible challenges yet for your course. Once your instructor assigns problems, they'll appear here.
+    </div>
+  {% endif %}
+</div>
+{% endblock %}

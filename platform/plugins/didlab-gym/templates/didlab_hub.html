@@ -1,0 +1,361 @@
+{% extends "base.html" %}
+
+{% block stylesheets %}
+  {{ super() }}
+  <style>
+    /* ===== Scoped styles ===== */
+    .ctf-landing {
+      --bg:#0b1620;
+      --panel:#0f2131;
+      --text:#eaf2f8;
+      --muted:#a7c3d8;
+      --accent:#19c2c2;
+      --accent-2:#ff6a3d;
+      color:var(--text);
+      background-color: var(--bg);
+    }
+    .ctf-landing .wrap { max-width:1100px; margin-inline:auto; padding:28px 20px; }
+    .ctf-landing a { color:var(--accent); text-decoration:none; }
+    .ctf-landing a:hover{ text-decoration:underline; }
+
+    .ctf-landing .hero-band {
+      width:100vw;
+      position:relative;
+      left:50%;
+      transform:translateX(-50%);
+      background:
+        radial-gradient(1200px 600px at 15% 0%, #123148 0%, var(--bg) 65%),
+        linear-gradient(135deg, rgba(25,194,194,.15), rgba(255,106,61,.08));
+      border-bottom:1px solid rgba(255,255,255,.08);
+    }
+    .ctf-landing .hero {
+      display:grid;
+      grid-template-columns:110px 1fr;
+      gap:18px;
+      align-items:center;
+      padding:40px 0 22px;
+    }
+    .ctf-landing h1 {
+      margin:0;
+      font-size:clamp(28px,4vw,46px);
+      line-height:1.1;
+      letter-spacing:.2px;
+    }
+    .ctf-landing .tag {
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding:6px 10px;
+      border:1px solid rgba(255,255,255,.15);
+      border-radius:999px;
+      color:var(--muted);
+      font-size:.9rem;
+    }
+    .ctf-landing .badges {
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      margin:10px 0 0;
+    }
+    .ctf-landing .badge {
+      display:flex;
+      align-items:center;
+      gap:6px;
+      background:rgba(255,255,255,.06);
+      border:1px solid rgba(255,255,255,.12);
+      padding:6px 10px;
+      border-radius:10px;
+      font-size:.9rem;
+      color:var(--muted);
+    }
+    .ctf-landing .kicker {
+      color:var(--accent-2);
+      font-weight:700;
+      font-size:.9rem;
+      letter-spacing:.2em;
+      text-transform:uppercase;
+    }
+    .ctf-landing .logo {
+      width:110px;
+      height:110px;
+      border-radius:16px;
+      background:radial-gradient(60% 60% at 50% 35%, rgba(25,194,194,.35), rgba(25,194,194,.06));
+      border:1px solid rgba(255,255,255,.15);
+      display:grid;
+      place-items:center;
+    }
+    .ctf-landing .logo svg {
+      filter:drop-shadow(0 0 16px rgba(25,194,194,.25));
+    }
+
+    .ctf-landing .cta {
+      display:flex;
+      flex-wrap:wrap;
+      gap:12px;
+      margin-top:18px;
+    }
+    .ctf-landing .btn {
+      appearance:none;
+      border:0;
+      padding:12px 16px;
+      border-radius:12px;
+      font-weight:700;
+      cursor:pointer;
+      text-decoration:none;
+      display:inline-flex;
+      align-items:center;
+      gap:10px;
+    }
+    .ctf-landing .btn.primary {
+      background:var(--accent);
+      color:#05232b;
+    }
+    .ctf-landing .btn.secondary {
+      background:transparent;
+      color:var(--text);
+      border:1px solid rgba(255,255,255,.18);
+    }
+
+    .ctf-landing main {
+      background:linear-gradient(180deg, #0f2131 0%, #0b1620 100%);
+    }
+    .ctf-landing section { scroll-margin-top:90px; }
+    .ctf-landing .grid { display:grid; gap:18px; }
+    .ctf-landing .two { grid-template-columns:1fr; }
+    .ctf-landing .three { grid-template-columns:1fr; }
+    @media (min-width: 840px){
+      .ctf-landing .two{grid-template-columns:1fr 1fr}
+      .ctf-landing .three{grid-template-columns:repeat(3,1fr)}
+    }
+    .ctf-landing .card {
+      background:var(--panel);
+      border:1px solid rgba(255,255,255,.08);
+      border-radius:16px;
+      padding:18px;
+    }
+    .ctf-landing .list{
+      margin:.3rem 0 .3rem 1rem;
+    }
+    .ctf-landing .list li{
+      margin:.15rem 0;
+    }
+    .ctf-landing .note{
+      border-left:4px solid var(--accent);
+      padding:10px 12px;
+      background:rgba(25,194,194,.08);
+      border-radius:8px;
+    }
+    .ctf-landing footer{
+      border-top:1px solid rgba(255,255,255,.08);
+      padding:24px 0 48px;
+      color:var(--muted);
+    }
+
+    /* === Ad placeholders === */
+    .ad-slot{
+      display:grid;
+      place-items:center;
+      color:var(--muted);
+      border:1px dashed rgba(255,255,255,.25);
+      border-radius:12px;
+    }
+    .ad-leaderboard{ height:90px; width:100%; margin:18px 0 8px; }
+    .ad-rectangle{ height:280px; width:100%; margin:18px 0; }
+    .ad-footerstrip{ height:100px; width:100%; margin:24px 0 0; }
+    .ad-slot small{ opacity:.8 }
+  </style>
+{% endblock %}
+
+{% block content %}
+<div class="ctf-landing">
+
+  <!-- HERO -->
+  <div class="hero-band">
+    <div class="wrap hero">
+      <div class="logo" aria-hidden="true">
+        <!-- Swap this SVG for your banner/logo if you prefer -->
+        <svg width="72" height="72" viewBox="0 0 72 72" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="CTF logo">
+          <path d="M36 6l22 8v15c0 17-10.2 27-22 31C24.2 56 14 46 14 29V14l22-8z"
+                stroke="var(--accent)" stroke-width="2" fill="rgba(25,194,194,.07)"/>
+          <rect x="28" y="28" width="16" height="18" rx="3"
+                stroke="var(--accent)" stroke-width="2" fill="rgba(25,194,194,.12)"/>
+          <circle cx="36" cy="26" r="5" stroke="var(--accent)" stroke-width="2"/>
+          <circle cx="36" cy="36" r="2" fill="var(--accent)"/>
+        </svg>
+      </div>
+      <div>
+        <div class="tag">
+          <span class="kicker">DIDLAB CTF</span> • Multi-course practice hub
+        </div>
+        <h1>Hack to Defend — Course Capture the Flag Hub</h1>
+
+        <div class="badges" aria-label="CIA triad">
+          <div class="badge">🔒 Confidentiality</div>
+          <div class="badge">🧭 Integrity</div>
+          <div class="badge">⏱️ Availability</div>
+        </div>
+
+        <div class="cta">
+          <!-- Primary: go to Gym practice view -->
+          <a class="btn primary" href="{{ url_for('didlab_gym.gym_index') }}">
+            Go to course practice (Gym)
+          </a>
+
+          <!-- Course scoreboard -->
+          <a class="btn secondary" href="{{ url_for('didlab_gym.gym_scoreboard') }}">
+            View course scoreboard
+          </a>
+
+          <!-- Full challenge list (global CTFd view) -->
+          <a class="btn secondary" href="{{ url_for('challenges.listing') }}">
+            All challenges
+          </a>
+
+          <!-- Page anchors -->
+          <a class="btn secondary" href="#start">How to start</a>
+          <a class="btn secondary" href="#learn">Learn & opportunities</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Ad: Leaderboard (728x90 / 970x90 / responsive) -->
+    <div class="wrap">
+      <div class="ad-slot ad-leaderboard" id="ad-top">
+        <small>Ad placeholder — paste your ad code here (leaderboard)</small>
+      </div>
+    </div>
+  </div>
+
+  <!-- MAIN -->
+  <main>
+    <div class="wrap">
+
+      <section id="what" class="grid two">
+        <div class="card">
+          <h2>What is a CTF?</h2>
+          <p><strong>Short version:</strong> mini puzzles that teach real security skills. Find a hidden <em>flag</em> to score points and climb the board.</p>
+          <ul class="list">
+            <li><strong>Jeopardy-style:</strong> Web, Crypto, Forensics, OSINT, Reverse, Pwning, Cloud, Blockchain.</li>
+            <li><strong>Attack/Defense:</strong> keep your service up while probing others — teamwork + chaos (in a lab!).</li>
+          </ul>
+          <p class="note">Play hard, play fair: hack only inside the CTF. Ask staff if you’re unsure.</p>
+        </div>
+
+        <div class="card">
+          <h2>Why this hub across courses?</h2>
+          <ul class="list">
+            <li>COMP_SCI-361 – Intro to Cybersecurity</li>
+            <li>COMP_SCI-381 – Ethical Hacking &amp; Penetration Testing</li>
+            <li>COMP_SCI-476 and 5576 – Blockchain</li>
+            <li>COMP_SCI-5533 – Applied Cryptography</li>
+            <li>Special DidLab workshops &amp; events</li>
+          </ul>
+          <p class="list">
+            Same platform, different tags. Your <strong>course_code</strong>, <strong>section</strong>, and
+            <strong>term</strong> control what shows up in your Course Gym and Scoreboard.
+          </p>
+        </div>
+      </section>
+
+      <!-- Mid-page ad rectangle / responsive -->
+      <div class="ad-slot ad-rectangle" id="ad-mid">
+        <small>Ad placeholder — paste your ad code here (rectangle 300×250/336×280/300×600)</small>
+      </div>
+
+      <section id="start" class="grid two">
+        <div class="card">
+          <h2>How to get started</h2>
+          <ol class="list">
+            <li>Sign in or create an account with your UMKC email.</li>
+            <li>
+              During registration, set:
+              <ul class="list">
+                <li><strong>course_code</strong> (COMP_SCI-361 / 381 / 476 / 5576 / 5533, etc.)</li>
+                <li><strong>section</strong> (0001 / 0002)</li>
+                <li><strong>term</strong> (e.g., 2026SP)</li>
+              </ul>
+            </li>
+            <li>Go to <strong>Course Gym</strong> to see the problems assigned to your course &amp; section.</li>
+            <li>Check the <strong>flag format</strong> &amp; rules for your event.</li>
+            <li>Start with <strong>Warm-ups / Easy</strong> to learn the flow and write brief post-solve notes.</li>
+          </ol>
+        </div>
+
+        <div class="card">
+          <h2>Starter toolkit</h2>
+          <ul class="list">
+            <li>DevTools, <a href="https://portswigger.net/burp/communitydownload" target="_blank" rel="noopener">Burp Suite Community</a>, curl, nmap</li>
+            <li>Python 3 + pwntools, CyberChef, Wireshark, Hashcat/John</li>
+            <li>VM (Kali/Ubuntu) or lab machine; optional: VS Code, Git, Docker</li>
+          </ul>
+        </div>
+      </section>
+
+      <section id="learn" class="grid three">
+        <div class="card">
+          <h3>Practice labs &amp; wargames</h3>
+          <ul class="list">
+            <li><a href="https://overthewire.org/wargames/" target="_blank" rel="noopener">OverTheWire</a></li>
+            <li><a href="https://picoctf.org/" target="_blank" rel="noopener">picoCTF</a></li>
+            <li><a href="https://www.tryhackme.com/" target="_blank" rel="noopener">TryHackMe</a> /
+                <a href="https://www.hackthebox.com/" target="_blank" rel="noopener">Hack The Box</a></li>
+            <li><a href="https://owasp.org/www-project-juice-shop/" target="_blank" rel="noopener">OWASP Juice Shop</a>,
+                <a href="https://owasp.org/www-project-webgoat/" target="_blank" rel="noopener">WebGoat</a></li>
+          </ul>
+        </div>
+
+        <div class="card">
+          <h3>News &amp; competitions</h3>
+          <ul class="list">
+            <li>📅 <a href="https://ctftime.org/" target="_blank" rel="noopener">CTFtime.org</a> — upcoming events &amp; results</li>
+            <li>🧭 Search GitHub/Medium for write-ups by challenge name</li>
+          </ul>
+        </div>
+
+        <div class="card">
+          <h3>Opportunities</h3>
+          <ul class="list">
+            <li>Join the campus Cybersecurity Club &amp; weekly practice.</li>
+            <li>Compete: NCL, CPTC, CCDC, ICC, and more.</li>
+            <li>Publish write-ups on GitHub; link them on your resume.</li>
+          </ul>
+        </div>
+      </section>
+
+      <section id="ethics" class="card" style="margin-top:18px">
+        <h2>Rules &amp; Ethics</h2>
+        <ul class="list">
+          <li>Only target services built for this CTF.</li>
+          <li>Don’t destroy availability: no DoS or uncontrolled brute force.</li>
+          <li>Report issues privately; do not share flags outside your team.</li>
+        </ul>
+      </section>
+
+      <!-- Footer sponsor strip -->
+      <div class="ad-slot ad-footerstrip" id="ad-footer">
+        <small>Sponsor strip — add partner logos or an ad unit</small>
+      </div>
+
+    </div>
+  </main>
+
+  <footer class="wrap">
+    <div>© <span id="year"></span> DIDLAB CTF • Learn to <em>hack to defend</em>.</div>
+  </footer>
+</div>
+
+<script>
+  // Footer year & smooth scroll
+  (function(){
+    var y=document.getElementById('year');
+    if(y) y.textContent=(new Date()).getFullYear();
+    document.querySelectorAll('.ctf-landing a[href^="#"]').forEach(function(a){
+      a.addEventListener('click', function(e){
+        e.preventDefault();
+        var tgt=document.querySelector(a.getAttribute('href'));
+        if(tgt) tgt.scrollIntoView({behavior:'smooth'});
+      });
+    });
+  })();
+</script>
+{% endblock %}
